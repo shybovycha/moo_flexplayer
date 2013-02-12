@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:local="*"
+			   applicationComplete="init();">
+			   
+	<s:VGroup horizontalCenter="0">
+		<local:MyVideoDisplay 
+			id="player" 
+			source="bar.flv" 
+			autoPlay="true" 
+			doubleClickEnabled="true" 
+			width="640"
+			height="480"
+		/>
+	</s:VGroup>
+
+</s:Application>
+-->
+
+<mx:Application 
+		xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:local="*"
+		layout="vertical" 
+		verticalAlign="middle" 
+		backgroundColor="white">
+ 
+    <mx:Style>
+        @font-face {
+            src:url("arial.ttf");
+            font-family: Arial;
+        }
+ 
+        .timeStyle {
+            color: #FFFFFF;
+            font-family: Arial;
+            font-size: 12;
+        }
+ 
+        .playPauseStyle {
+            /* play button skins */
+            skin: Embed('control_play.png');
+            downSkin: Embed('control_play_blue.png');
+ 
+            /* pause button skins */
+            selectedUpSkin: Embed('control_pause.png');
+            selectedOverSkin: Embed('control_pause.png');
+            selectedDownSkin: Embed('control_pause_blue.png');
+        }
+ 
+        .stopStyle {
+            skin: Embed('control_stop.png');
+            downSkin: Embed('control_stop_blue.png');
+        }
+ 
+        .controllerStyle {
+            bottom: 5;
+            left: 5;
+            right: 5;
+            paddingBottom: 5;
+            paddingLeft: 5;
+            paddingRight: 5;
+            paddingTop: 5;
+            alpha: 0;
+            background-color: #000000;
+            background-alpha: 0.5;
+        }
+    </mx:Style>
+ 
+    <mx:Script>
+        <![CDATA[
+            import mx.events.VideoEvent;
+ 
+            private function showControls():void {
+                fadeIn.play([controls]);
+            }
+ 
+            private function hideControls():void {
+                fadeOut.play([controls]);
+            }
+ 
+            private function videoDisplay_playheadUpdate(evt:VideoEvent):void {
+                var pTime:Date = new Date(videoDisplay.playheadTime * 1000 || 100);
+                var tTime:Date = new Date(videoDisplay.totalTime * 1000);
+                time.text = dateFormatter.format(pTime) + " / " + dateFormatter.format(tTime);
+            }
+ 
+            private function playPauseButton_click(evt:MouseEvent):void {
+                if (videoDisplay.playing) {
+                    videoDisplay.pause();
+                } else {
+                    videoDisplay.play();
+                }
+            }
+ 
+            private function stopButton_click(evt:MouseEvent):void {
+                videoDisplay.stop();
+            }
+        ]]>
+    </mx:Script>
+ 
+    <mx:Fade id="fadeIn" alphaFrom="0.0" alphaTo="1.0" />
+    <mx:Fade id="fadeOut" alphaFrom="1.0" alphaTo="0.0" />
+ 
+    <mx:DateFormatter id="dateFormatter" formatString="NN:SS" />
+ 
+    <mx:Label text="Mouse over the VideoDisplay control below to show control buttons." />
+    <mx:Canvas rollOver="showControls()" rollOut="hideControls()" width="640" height="480">
+        <local:MyMxVideoDisplay id="videoDisplay" source="bar.flv" autoPlay="false" playheadUpdate="videoDisplay_playheadUpdate(event)" maintainAspectRatio="true" width="100%" height="100%" />
+		<mx:HBox id="controls" styleName="controllerStyle" alpha="0.0">
+			<mx:Button id="playPauseButton" styleName="playPauseStyle" toggle="true" selected="{videoDisplay.playing}" click="playPauseButton_click(event)" />
+			<mx:Button id="stopButton" styleName="stopStyle" click="stopButton_click(event)" />
+			<mx:Spacer width="100%" />
+			<mx:Label id="time" styleName="timeStyle" />
+		</mx:HBox>
+    </mx:Canvas>
+ 
+</mx:Application>
